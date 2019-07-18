@@ -4,15 +4,18 @@ package com.lab2;
 import java.io.*;
 import java.util.*;
 
-class fileProcessor {
+class FileProcessor {
     private  final  boolean longInfo;
     private  final boolean humanReadableInfo;
     private  final  boolean reverseInfo;
     private  String outputFileName;
     private final String inputFileName;
 
+    FileProcessor(boolean longInfo, boolean humanReadableInfo, boolean reverseInfo, String inputFileName) {
+        this(longInfo, humanReadableInfo, reverseInfo, null, inputFileName);
+    }
 
-    fileProcessor(boolean longInfo, boolean humanReadableInfo, boolean reverseInfo, String outputFileName, String inputFileName) {
+    FileProcessor(boolean longInfo, boolean humanReadableInfo, boolean reverseInfo, String outputFileName, String inputFileName) {
         this.longInfo = longInfo;
         this.humanReadableInfo = humanReadableInfo;
         this.reverseInfo = reverseInfo;
@@ -20,19 +23,11 @@ class fileProcessor {
         this.inputFileName = inputFileName;
     }
 
-
-    fileProcessor(boolean longInfo, boolean humanReadableInfo, boolean reverseInfo, String inputFileName) {
-        this.longInfo = longInfo;
-        this.humanReadableInfo = humanReadableInfo;
-        this.reverseInfo = reverseInfo;
-        this.inputFileName = inputFileName;
-    }
-
     void getFileInfo() {
         final File file;
-        ArrayList<String> paths = new ArrayList<>();
-        ArrayList<String> fileNames = new ArrayList<>();
-
+        List<String> paths = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
+        String info = "";
         try {
             file = new File(inputFileName);
             fileNames.add(inputFileName);
@@ -40,7 +35,7 @@ class fileProcessor {
                 System.out.println("File " + inputFileName + " doesn't exist");
                 return;
             }
-            String info = "";
+
             if(file.isDirectory()) fileNames.addAll(Arrays.asList(Objects.requireNonNull(file.list())));
 
             for(int i = 0; i < fileNames.size(); i++) {
@@ -58,7 +53,11 @@ class fileProcessor {
                 Collections.reverse(paths);
             }
             if(outputFileName != null) {
-                writeIntoFile(info);
+                StringBuilder fileText = new StringBuilder();
+                for(String path:paths) {
+                   fileText.append(path);
+                }
+                writeIntoFile(fileText.toString());
                 System.out.println("Info was stored in " + outputFileName + " successfully!");
             } else {
                 for(String path:paths) {
@@ -72,11 +71,11 @@ class fileProcessor {
     }
 
     private String getAcl(File file, boolean bits) {
-        String result = "";
-        result = result.concat(bits ? file.canRead() ? "1" : "0" : file.canRead() ? "r" : "");
-        result = result.concat(bits ? file.canWrite() ? "1" : "0": file.canWrite() ? "w" : "");
-        result = result.concat(bits ? file.canExecute() ? "1" : "0": file.canExecute() ? "x" : "");
-        return result;
+        StringBuilder result = new StringBuilder();
+        result.append(bits ? file.canRead() ? "1" : "0" : file.canRead() ? "r" : "");
+        result.append(bits ? file.canWrite() ? "1" : "0": file.canWrite() ? "w" : "");
+        result.append(bits ? file.canExecute() ? "1" : "0": file.canExecute() ? "x" : "");
+        return result.toString();
     }
 
     private String fileSize(long bytes) {

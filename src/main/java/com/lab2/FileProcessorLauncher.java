@@ -6,7 +6,7 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 
-public class fileProcessorLauncher
+public class FileProcessorLauncher
 {
     @Option(name = "-l", aliases="--long", usage="Print rwx, last modification time and size in a bit mask.")
     private boolean longInfo;
@@ -24,7 +24,7 @@ public class fileProcessorLauncher
     private String inputFileName;
 
     public static void main(String[] args) {
-        new fileProcessorLauncher().launch(args);
+        new FileProcessorLauncher().launch(args);
     }
 
     void launch(String[] args) {
@@ -39,8 +39,8 @@ public class fileProcessorLauncher
             return;
         }
 
-        fileProcessor fp = outputFileName != null ? new fileProcessor(longInfo, humanReadableInfo, reverseInfo, outputFileName, inputFileName):
-                new fileProcessor(longInfo, humanReadableInfo, reverseInfo, inputFileName) ;
+        FileProcessor fp = outputFileName != null ? new FileProcessor(longInfo, humanReadableInfo, reverseInfo, outputFileName, inputFileName):
+                new FileProcessor(longInfo, humanReadableInfo, reverseInfo, inputFileName) ;
         fp.getFileInfo();
     }
 }
